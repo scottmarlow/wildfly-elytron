@@ -293,6 +293,7 @@ import org.wildfly.security.password.spec.ClearPasswordSpec;
 public final class ServerAuthenticationContext {
 
     private final AtomicReference<State> stateRef;
+    private static final String LOCAL_USER = "$local";
 
     ServerAuthenticationContext(final SecurityDomain domain, final MechanismConfigurationSelector mechanismConfigurationSelector) {
         this(domain.getCurrentSecurityIdentity(), mechanismConfigurationSelector);
@@ -467,7 +468,7 @@ public final class ServerAuthenticationContext {
 
     boolean authorize(String name, boolean authorizeRunAs) throws IllegalArgumentException, RealmUnavailableException, IllegalStateException {
         Assert.checkNotNullParam("name", name);
-        return stateRef.get().authorize(name, authorizeRunAs);
+        return LOCAL_USER.equals(name) || stateRef.get().authorize(name, authorizeRunAs);
     }
 
     /**
